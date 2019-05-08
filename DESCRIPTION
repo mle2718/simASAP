@@ -1,6 +1,6 @@
 Package: simASAP
 Title: Simulate ASAP Data Sets and Optionally Run Them
-Version: 0.0.0.9003
+Version: 0.0.0.9004
 Authors@R: 
     person(given = "Chris",
            family = "Legault",
@@ -11,3 +11,6 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
+Imports: 
+    dplyr,
+    ggplot2
