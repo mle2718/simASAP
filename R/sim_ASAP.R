@@ -36,21 +36,80 @@ SimASAP <- function(wd, asap.name, nsim, od=file.path(wd, "sim"), runflag=FALSE)
 
     sim.dat <- asap.dat
 
-    # generate new total catch observations
+    # handle each fleet one at a time
+    for (ifleet in 1:asap$parms$nfleets){
 
-    # generate new catch at age proportions
+      # generate new total catch observations
+      ctotfleet <- asap$catch.pred[ifleet, ]
+      sigma <- sqrt(log(1 + asap$control.parms$catch.tot.cv[, ifleet] ^ 2))
+      randomval <- stats::rnorm(length(ctotfleet))
+      ctotnew <- ctotfleet * exp(randomval * sigma)
 
-    # generate new aggregate index observations
+      # generate new catch at age proportions
+      myval <- (ifleet - 1) * 4 + 2 # obs and pred for catch and discards for each fleet, catch pred 2nd
+      caafleet <- asap$catch.comp.mats[[myval]]
+      caanew <- caafleet
+      ess <- asap$fleet.catch.Neff.init[ifleet, ]
+      for (icount in 1:length(ess)){
+        if (ess[icount] > 0){
+          sumcaa <- sum(caafleet[icount, ])
+          if (sumcaa > 0){
+            myprob <- caafleet[icount, ] / sumcaa
+            caanew[icount, ] <- rmultinom(1, ess[icount], prob=myprob)
+          } else {
+            caanew[icount, ] <- rep(0, length(caafleet[icount, ]))
+          }
+        }
+      }
 
-    # generate new index at age proportions
+      # put new values into sim.dat object
+      sim.dat$dat$CAA_mats[[ifleet]] <- cbind(caanew, ctotnew)
+    }
 
+    #--------------------------------
+    # handle each index one at a time
+    for (ind in 1:asap$parms$nindices){
+
+      iaa_mat <- asap.dat$dat$IAA_mats[[ind]]
+      sim_mat <- iaa_mat
+
+      # generate new index observations, only replace positive values
+      indval <- iaa_mat[,2]
+      sigma <- sqrt(log(1 + iaa_mat[,3] ^ 2))
+      for (icount in 1:length(indval)){
+        if (indval[icount] > 0){
+          randomval <- stats::rnorm(1)
+          sim_mat[icount, 2] <- indval[icount] * exp(randomval * sigma[icount])
+        }
+      }
+
+      # generate new index at age proportions for years with ess > 0
+      ess <- iaa_mat[, (asap$parms$nages + 4)]
+      mycols <- seq(4, (length(iaa_mat[1,]) - 1))
+      for (icount in 1:length(ess)){
+        if (ess[icount] > 0){
+          iaavals <- iaa_mat[icount, mycols]
+          sumiaavals <- sum(iaavals)
+          if (sumiaavals > 0){
+            myprob <- iaavals / sumiaavals
+            sim_mat[icount, mycols] <- rmultinom(1, ess[icount], prob=myprob)
+          }
+        }
+      }
+
+      # put into sim.dat object
+      sim.dat$dat$IAA_mats[[ind]] <- sim_mat
+    }
+
+    #--------------------------
     # write this simulated data
     fname <- file.path(od, paste0(asap.name, "_sim", isim, ".dat"))
     header.text <- "File created with SimASAP"
     WriteASAP3DatFile(fname,sim.dat,header.text)
 
-  }
+  } # end of isim data file creation loop
 
+  #-----------------------------------
   # optionally run all the simulations
   if (runflag == TRUE){
     file.copy(from = file.path(wd, "ASAP3.EXE"), to = od, overwrite = FALSE)
