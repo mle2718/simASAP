@@ -55,8 +55,12 @@ PlotSimASAP <- function(wd, asap.name, whichsim, od=file.path(wd, "sim"), save.p
     geom_point(data=dplyr::filter(res, Source == "True")) +
     facet_wrap(~metric, ncol = 1, scales = "free_y") +
     expand_limits(y=0) +
-    {if (length(unique(res$Source)) > 5) theme(legend.position = "none")} +
     theme_bw()
+
+  if (length(unique(res$Source)) > 5){
+    p <- p + theme(legend.position = "none")
+  }
+
   print(p)
   if (save.plots == TRUE){
     ggsave(filename = file.path(od, "comparisonplots.png"), p)
