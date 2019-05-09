@@ -10,7 +10,8 @@ Description: Starting with a successfully run ASAP data file, conduct self-test
   by generating data with measurement errors that follow the prescribed distribution 
   type and level of uncertainty. Can optionally run ASAP on each created data set. 
   Can plot Freport, recruitment, and spawning stock biomass time series estimates from
-  each simulated data set and compare to true values.
+  each simulated data set and compare to true values. Includes example script showing
+  how to use functions and sample ASAP data files.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
