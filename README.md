@@ -12,3 +12,4 @@ my.dir <- "C:\\Users\\chris.legault\\Desktop\\testSimASAP"
 file.copy(from = file.path(simASAP.dir, "example_SimASAP.R"), to = my.dir)
 ```
 
+<img src="./examples/comparisonplots_simplelogistic.png">
