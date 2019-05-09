@@ -1,12 +1,16 @@
 Package: simASAP
 Title: Simulate ASAP Data Sets and Optionally Run Them
-Version: 0.0.0.9008
+Version: 0.0.0.9009
 Authors@R: 
     person(given = "Chris",
            family = "Legault",
            role = c("aut", "cre"),
            email = "chris.legault@noaa.gov")
-Description: What the package does (one paragraph).
+Description: Starting with a successfully run ASAP data file, conduct self-test 
+  by generating data with measurement errors that follow the prescribed distribution 
+  type and level of uncertainty. Can optionally run ASAP on each created data set. 
+  Can plot Freport, recruitment, and spawning stock biomass time series estimates from
+  each simulated data set and compare to true values.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
