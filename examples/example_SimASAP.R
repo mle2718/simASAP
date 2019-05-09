@@ -70,6 +70,15 @@ file.copy(from = file.path(simASAP.dir, "examples", paste0(my.asap.name, ".dat")
 SimASAP(wd=base.dir, asap.name=my.asap.name, nsim=10, runflag=TRUE)
 PlotSimASAP(wd=base.dir, asap.name=my.asap.name, whichsim=1:10)
 
+# what if use the wrong M in the simulated input files? (this is an advanced use of the package)
+# create wrongM subdirectory
+# read simplelogistic_simX.dat using ReadASAP3DatFile
+# modify the M matrix
+# write out wrongM_simX.dat in wrongM directory using WriteASAP3DatFile
+# need to write a loop to run ASAP on each run
+# can then use PlotSimASAP to make the comparison (need to copy the true data to wrongM naming)
+
+
 # the following lines are just to copy the file into my examples directory and rename
 # file.copy(from = file.path(od, "comparisonplots.png"),
 #           to = paste0("./examples/comparisonplots_", my.asap.name, ".png"))
