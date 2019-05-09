@@ -61,9 +61,17 @@ mysims <- res %>%
   as.numeric(.)
 PlotSimASAP(wd=base.dir, asap.name=my.asap.name, whichsim=mysims)
 
+# what if take away a bunch of data and crank up the CVs?
+base.dir <- "C:\\Users\\chris.legault\\Desktop\\testSimASAP"
+my.asap.name <- "badmodel"
+SimASAP(wd=base.dir, asap.name=my.asap.name, nsim=10, runflag=TRUE)
+PlotSimASAP(wd=base.dir, asap.name=my.asap.name, whichsim=1:10)
+
 # the following lines are just to copy the file into my examples directory and rename
-#file.copy(from = file.path(od, "comparisonplots.png"),
-#          to = paste0("./examples/comparisonplots_", my.asap.name, ".png"))
+# file.copy(from = file.path(od, "comparisonplots.png"),
+#           to = paste0("./examples/comparisonplots_", my.asap.name, ".png"))
+# file.copy(from = file.path(base.dir, "simplelogistic.dat"), to = "./examples")
+# file.copy(from = file.path(base.dir, "badmodel.dat"), to = "./examples")
 
 
 # ###################################################################
@@ -100,3 +108,4 @@ PlotSimASAP(wd=base.dir, asap.name=my.asap.name, whichsim=mysims)
 # dev.off()
 # file.copy(from=file.path(base.dir, "groundfish_comparison_plots.pdf"), to="./examples")
 #
+
