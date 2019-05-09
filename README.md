@@ -8,7 +8,7 @@ devtools::install_github("cmlegault/simASAP")
 library(simASAP)
 simASAP.dir <- find.package("simASAP")
 # replace my directory with one on your computer that you want to use
-my.dir <- "C:\\Users\\chris.legault\\Desktop\\delme" 
+my.dir <- "C:\\Users\\chris.legault\\Desktop\\testSimASAP" 
 file.copy(from = file.path(simASAP.dir, "examples", "example_SimASAP.R"), to = my.dir)
 ```
 
