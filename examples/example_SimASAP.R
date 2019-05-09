@@ -20,9 +20,8 @@ SimASAP(wd=base.dir, asap.name=my.asap.name, nsim=10)
 # with each other and the original run to see that they have changed
 # can do this by hand or using the ReadASAP3DatFile function
 datorig <- ReadASAP3DatFile(file.path(base.dir, paste0(my.asap.name, ".dat")))
-od <- file.path(base.dir, "sim")
-datsim1 <- ReadASAP3DatFile(file.path(od, paste0(my.asap.name, "_sim1.dat")))
-datsim2 <- ReadASAP3DatFile(file.path(od, paste0(my.asap.name, "_sim2.dat")))
+datsim1 <- ReadASAP3DatFile(file.path(base.dir, "sim", paste0(my.asap.name, "_sim1.dat")))
+datsim2 <- ReadASAP3DatFile(file.path(base.dir, "sim", paste0(my.asap.name, "_sim2.dat")))
 rbind(datorig$dat$CAA_mats[[1]][1, ],
       datsim1$dat$CAA_mats[[1]][1, ],
       datsim2$dat$CAA_mats[[1]][1, ])

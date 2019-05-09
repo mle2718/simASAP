@@ -7,10 +7,9 @@ This package allows the user to create, and optionally run, ASAP data sets in a 
 devtools::install_github("cmlegault/simASAP")
 library(simASAP)
 simASAP.dir <- find.package("simASAP")
-example.dir <- file.path(simASAP.dir, "examples")
 # replace my directory with one on your computer that you want to use
 my.dir <- "C:\\Users\\chris.legault\\Desktop\\delme" 
-file.copy(from = file.path(example.dir, "example_SimASAP.R"), to = my.dir)
+file.copy(from = file.path(simASAP.dir, "examples", "example_SimASAP.R"), to = my.dir)
 ```
 
 <img src="./examples/comparisonplots_simplelogistic.png">
