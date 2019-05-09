@@ -8,7 +8,8 @@ library("dplyr")   # shouldn't need to do this but doesn't seem to work otherwis
 # first define where your original ASAP run will be located
 base.dir <- "C:\\Users\\chris.legault\\Desktop\\testSimASAP"
 my.asap.name <- "simplelogistic"
-file.copy(from = paste0("./examples/", my.asap.name, ".dat"), to = base.dir)
+# assumes you have already run simASAP.dir <- find.package("simASAP")
+file.copy(from = file.path(simASAP.dir, "examples", paste0(my.asap.name, ".dat")), to = base.dir)
 # get ASAP from the NOAA Fisheries Toolbox and run through the GUI
 
 # now ready to start using simASAP package
@@ -64,6 +65,8 @@ PlotSimASAP(wd=base.dir, asap.name=my.asap.name, whichsim=mysims)
 # what if take away a bunch of data and crank up the CVs?
 base.dir <- "C:\\Users\\chris.legault\\Desktop\\testSimASAP"
 my.asap.name <- "badmodel"
+file.copy(from = file.path(simASAP.dir, "examples", paste0(my.asap.name, ".dat")), to = base.dir)
+# need to run badmodel.dat through ASAP GUI before continuing
 SimASAP(wd=base.dir, asap.name=my.asap.name, nsim=10, runflag=TRUE)
 PlotSimASAP(wd=base.dir, asap.name=my.asap.name, whichsim=1:10)
 
