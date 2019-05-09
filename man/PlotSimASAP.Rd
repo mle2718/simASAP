@@ -5,7 +5,7 @@
 \title{PlotSimASAP}
 \usage{
 PlotSimASAP(wd, asap.name, whichsim, od = file.path(wd, "sim"),
-  save.plots = FALSE)
+  save.plots = FALSE, returnwhat = "nothing")
 }
 \arguments{
 \item{wd}{directory where original ASAP run is located}
@@ -17,6 +17,8 @@ PlotSimASAP(wd, asap.name, whichsim, od = file.path(wd, "sim"),
 \item{od}{location where new data sets are saved (defaults to sim subdirectory of wd)}
 
 \item{save.plots}{will save png files if TRUE (default = FALSE)}
+
+\item{returnwhat}{valid options are "results", "plot", "both", "nothing" (default="nothing")}
 }
 \description{
 Comparison plots of SSB, Freport, and Recruitment from SimASAP runs with true values.

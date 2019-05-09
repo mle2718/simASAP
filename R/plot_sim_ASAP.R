@@ -7,11 +7,18 @@
 #' @param whichsim vector of numbers for which simulated data sets to plot
 #' @param od location where new data sets are saved (defaults to sim subdirectory of wd)
 #' @param save.plots will save png files if TRUE (default = FALSE)
+#' @param returnwhat valid options are "results", "plot", "both", "nothing" (default="nothing")
 #' @export
 
-PlotSimASAP <- function(wd, asap.name, whichsim, od=file.path(wd, "sim"), save.plots=FALSE){
+PlotSimASAP <- function(wd, asap.name, whichsim, od=file.path(wd, "sim"), save.plots=FALSE, returnwhat="nothing"){
 
-  # check for files first
+  # check for valid returnwhat value
+  validoptions <- c("results", "plot", "both", "nothing")
+  if (!(returnwhat %in% validoptions)){
+    return(paste("Error: returnwhat must be one of:", paste(validoptions, collapse = ", ")))
+  }
+
+  # check for files
   if (!file.exists(file.path(wd, paste0(asap.name, ".rdat")))){
     return(paste0("Error: ", asap.name, ".rdat not located in ", wd))
   }
@@ -23,7 +30,7 @@ PlotSimASAP <- function(wd, asap.name, whichsim, od=file.path(wd, "sim"), save.p
     }
   }
   if (simrdats == FALSE){
-    return(paste0("Error: no files ", asap.dat, "_sim(whichsim).rdat located in ", od))
+    return(paste0("Error: no files ", asap.name, "_sim(whichsim).rdat located in ", od))
   }
 
   # get true values
@@ -50,7 +57,7 @@ PlotSimASAP <- function(wd, asap.name, whichsim, od=file.path(wd, "sim"), save.p
   }
 
   # make plot and optionally save
-  p <- ggplot(res, aes(x=Year, y=value, color=Source)) +
+  p <- ggplot2::ggplot(res, aes(x=Year, y=value, color=Source)) +
     geom_line() +
     geom_point(data=dplyr::filter(res, Source == "True")) +
     facet_wrap(~metric, ncol = 1, scales = "free_y") +
@@ -63,7 +70,16 @@ PlotSimASAP <- function(wd, asap.name, whichsim, od=file.path(wd, "sim"), save.p
 
   print(p)
   if (save.plots == TRUE){
-    ggsave(filename = file.path(od, "comparisonplots.png"), p)
+    ggplot2::ggsave(filename = file.path(od, "comparisonplots.png"), p)
   }
-  return(res)
+
+  myreturn <- NULL
+  if (returnwhat == "results"){
+    myreturn <- res
+  } else if (returnwhat == "plot"){
+    myreturn <- p
+  } else if (returnwhat == "both"){
+    myreturn <- list(res = res, p = p)
+  }
+  return(myreturn)
 }

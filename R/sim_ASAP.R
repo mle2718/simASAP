@@ -55,7 +55,7 @@ SimASAP <- function(wd, asap.name, nsim, od=file.path(wd, "sim"), runflag=FALSE)
           sumcaa <- sum(caafleet[icount, ])
           if (sumcaa > 0){
             myprob <- caafleet[icount, ] / sumcaa
-            caanew[icount, ] <- rmultinom(1, ess[icount], prob=myprob)
+            caanew[icount, ] <- stats::rmultinom(1, ess[icount], prob=myprob)
           } else {
             caanew[icount, ] <- rep(0, length(caafleet[icount, ]))
           }
@@ -92,7 +92,7 @@ SimASAP <- function(wd, asap.name, nsim, od=file.path(wd, "sim"), runflag=FALSE)
           sumiaavals <- sum(iaavals)
           if (sumiaavals > 0){
             myprob <- iaavals / sumiaavals
-            sim_mat[icount, mycols] <- rmultinom(1, ess[icount], prob=myprob)
+            sim_mat[icount, mycols] <- stats::rmultinom(1, ess[icount], prob=myprob)
           }
         }
       }
