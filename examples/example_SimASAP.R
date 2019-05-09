@@ -3,6 +3,7 @@
 
 library("simASAP")
 library("ggplot2") # shouldn't need to do this but doesn't seem to work otherwise
+library("dplyr")   # shouldn't need to do this but doesn't seem to work otherwise
 
 # first define where your original ASAP run will be located
 base.dir <- "C:\\Users\\chris.legault\\Desktop\\testSimASAP"
@@ -49,7 +50,54 @@ PlotSimASAP(wd=base.dir, asap.name=my.asap.name, whichsim=1:10)
 # to save the plot set save.plots to TRUE
 PlotSimASAP(wd=base.dir, asap.name=my.asap.name, whichsim=1:10, save.plots=TRUE)
 
+# can go wild examining the results, for example,
+# to show just the simulations with the highest and lowest SSB in the terminal year
+res <- PlotSimASAP(wd=base.dir, asap.name=my.asap.name, whichsim=1:10, returnwhat="results")
+mysims <- res %>%
+  filter(Year == max(Year), metric == "SSB", Source != "True") %>%
+  filter(value == min(value) | value == max(value)) %>%
+  mutate(simnum = substr(Source, 4, 99)) %>%
+  select(simnum) %>%
+  unlist(.) %>%
+  as.numeric(.)
+PlotSimASAP(wd=base.dir, asap.name=my.asap.name, whichsim=mysims)
+
 # the following lines are just to copy the file into my examples directory and rename
 #file.copy(from = file.path(od, "comparisonplots.png"),
 #          to = paste0("./examples/comparisonplots_", my.asap.name, ".png"))
 
+
+# ###################################################################
+# # took a look at a number of actual assessments to see what happens
+# # all this is commented out so users don't try to do it themselves
+# # included here to demonstrate how it can be done
+#
+# # groundfish
+# # ASAP assessment input files from https://www.nefsc.noaa.gov/saw/sasi/sasi_report_options.php
+# base.dir <- "C:\\Users\\chris.legault\\Desktop\\jitter_asap\\"
+# gstocks <- c("gomcod", "gomhaddock", "pollock", "redfish", "snemawinter", "snemayt", "whitehake")
+# nstocks <- length(gstocks)
+# gname <- "base" # did not have to do this, just an easier way of running through many cases in a loop
+#
+# # run each model 10 times
+# for (istock in 1:nstocks){
+#   wd <- file.path(base.dir, gstocks[istock])
+#   SimASAP(wd=wd, asap.name=gname, nsim=10, runflag=TRUE)
+# }
+#
+# # make the plots and modify them to include stock name as title (nice feature of ggplot)
+# gres <- list()
+# for (istock in 1:nstocks){
+#   wd <- file.path(base.dir, gstocks[istock])
+#   myplot <- PlotSimASAP(wd, gname, 1:10, returnwhat="plot")
+#   gres[[istock]] <- myplot + ggtitle(gstocks[istock])
+# }
+# # no indications of problems with any of these
+#
+# pdf(file=file.path(base.dir, "groundfish_comparison_plots.pdf"))
+# for (istock in 1:nstocks){
+#   print(gres[[istock]])
+# }
+# dev.off()
+# file.copy(from=file.path(base.dir, "groundfish_comparison_plots.pdf"), to="./examples")
+#
