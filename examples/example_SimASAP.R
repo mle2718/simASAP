@@ -70,21 +70,54 @@ file.copy(from = file.path(simASAP.dir, "examples", paste0(my.asap.name, ".dat")
 SimASAP(wd=base.dir, asap.name=my.asap.name, nsim=10, runflag=TRUE)
 PlotSimASAP(wd=base.dir, asap.name=my.asap.name, whichsim=1:10)
 
-# what if use the wrong M in the simulated input files? (this is an advanced use of the package)
-# create wrongM subdirectory
-# read simplelogistic_simX.dat using ReadASAP3DatFile
-# modify the M matrix
-# write out wrongM_simX.dat in wrongM directory using WriteASAP3DatFile
-# need to write a loop to run ASAP on each run
-# can then use PlotSimASAP to make the comparison (need to copy the true data to wrongM naming)
+#------------------------------------------------------
+# what if use the wrong M in the simulated input files?
+# this is an advanced use of the package requiring more user coding
+file.copy(from = file.path(base.dir, paste0(my.asap.name, ".dat")),
+          to = file.path(base.dir, "wrongM.dat"))
+file.copy(from = file.path(base.dir, paste0(my.asap.name, ".rdat")),
+          to = file.path(base.dir, "wrongM.rdat"))
 
+wrongM.dir <- file.path(base.dir, "sim", "wrongM")
+if (!dir.exists(wrongM.dir)) dir.create(wrongM.dir)
+file.copy(from = file.path(base.dir, "ASAP3.EXE"),
+          to = file.path(wrongM.dir, "ASAP3.EXE"))
+orig.dir <- getwd()
+setwd(wrongM.dir) # unfortunately need to do this to run ASAP3
+
+for (isim in 1:10){
+  asap.dat <- ReadASAP3DatFile(file.path(base.dir, "sim", paste0(my.asap.name, "_sim", isim, ".dat")))
+  asap.dat$dat$M <- asap.dat$dat$M / 2 # use M=0.15 instead of true M of 0.3
+  wname <- paste0("wrongM_sim", isim)
+  my.bad.name <- file.path(base.dir, "sim", "wrongM", paste0(wname, ".dat"))
+  WriteASAP3DatFile(my.bad.name, asap.dat, "double true M")
+  dname <- paste0(wname, ".dat")
+  file.remove("asap3.rdat")
+  file.remove("asap3.std")
+  shell(paste("ASAP3.exe -ind", dname), intern=TRUE)
+  # use presence of .std file to indicate converged run
+  if (file.exists("asap3.std")){
+    file.copy(from = "asap3.rdat", to =paste0(wname, ".rdat"))
+    asap <- dget("asap3.rdat")
+    objfxn <- asap$like$lk.total
+    print(paste("simulation", isim, "complete, objective function =", objfxn))
+  }else{
+    print(paste("simulation", isim, "did not converge"))
+  }
+}
+setwd(orig.dir)
+wrongM.plot <- PlotSimASAP(base.dir, "wrongM", 1:10, wrongM.dir, FALSE, "plot")
+wrongM.plot <- wrongM.plot + ggtitle("Wrong M (0.15 instead of 0.30) used in assessment")
+ggsave(file = file.path(wrongM.dir, "wrongM.png"), wrongM.plot)
+
+#------------------------------------------------------
 
 # the following lines are just to copy the file into my examples directory and rename
 # file.copy(from = file.path(od, "comparisonplots.png"),
 #           to = paste0("./examples/comparisonplots_", my.asap.name, ".png"))
 # file.copy(from = file.path(base.dir, "simplelogistic.dat"), to = "./examples")
 # file.copy(from = file.path(base.dir, "badmodel.dat"), to = "./examples")
-
+# file.copy(from = file.path(wrongM.dir, "wrongM.png"), to = "./examples")
 
 # ###################################################################
 # # took a look at a number of actual assessments to see what happens
