@@ -9,7 +9,7 @@ library(simASAP)
 simASAP.dir <- find.package("simASAP")
 # replace my directory with one on your computer that you want to use
 my.dir <- "C:\\Users\\chris.legault\\Desktop\\testSimASAP" 
-file.copy(from = file.path(simASAP.dir, "examples", "example_SimASAP.R"), to = my.dir)
+file.copy(from = file.path(simASAP.dir, "example_scripts", "example_SimASAP.R"), to = my.dir)
 ```
 
 <img src="./examples/comparisonplots_simplelogistic.png">
