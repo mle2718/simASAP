@@ -6,35 +6,38 @@
 #' @param asap.name base name of original dat file (without the .dat extension)
 #' @param whichsim vector of numbers for which simulated data sets to plot
 #' @param od location where new data sets are saved (defaults to sim subdirectory of wd)
+#' @param asapretro logical flag for whether to add "_000" before ".rdat" when selecting files (default=FALSE)
 #' @param save.plots will save png files if TRUE (default = FALSE)
 #' @param returnwhat valid options are "results", "plot", "both", "nothing" (default="nothing")
 #' @export
 
-PlotSimASAP <- function(wd, asap.name, whichsim, od=file.path(wd, "sim"), save.plots=FALSE, returnwhat="nothing"){
+PlotSimASAP <- function(wd, asap.name, whichsim, od=file.path(wd, "sim"), asapretro=FALSE, save.plots=FALSE, returnwhat="nothing"){
 
   # check for valid returnwhat value
   validoptions <- c("results", "plot", "both", "nothing")
-  if (!(returnwhat %in% validoptions)){
+  if (!(returnwhat %in% validoptions)) {
     return(paste("Error: returnwhat must be one of:", paste(validoptions, collapse = ", ")))
   }
 
   # check for files
-  if (!file.exists(file.path(wd, paste0(asap.name, ".rdat")))){
-    return(paste0("Error: ", asap.name, ".rdat not located in ", wd))
+  rdat_ext <- ifelse(asapretro == FALSE, ".rdat", "_000.rdat")
+  
+  if (!file.exists(file.path(wd, paste0(asap.name, rdat_ext)))) {
+    return(paste0("Error: ", asap.name, rdat_ext, " not located in ", wd))
   }
 
   simrdats <- FALSE
-  for (isim in 1:length(whichsim)){
-    if(file.exists(file.path(od, paste0(asap.name, "_sim", isim, ".rdat")))){
+  for (isim in 1:length(whichsim)) {
+    if(file.exists(file.path(od, paste0(asap.name, "_sim", isim, rdat_ext)))) {
       simrdats <- TRUE
     }
   }
-  if (simrdats == FALSE){
-    return(paste0("Error: no files ", asap.name, "_sim(whichsim).rdat located in ", od))
+  if (simrdats == FALSE) {
+    return(paste0("Error: no files ", asap.name, "_sim(whichsim)", rdat_ext," located in ", od))
   }
 
   # get true values
-  asap <- dget(file.path(wd, paste0(asap.name, ".rdat")))
+  asap <- dget(file.path(wd, paste0(asap.name, rdat_ext)))
   years <- seq(asap$parms$styr, asap$parms$endyr)
   nyears <- length(years)
   res <- data.frame(Source = "True",
@@ -43,10 +46,10 @@ PlotSimASAP <- function(wd, asap.name, whichsim, od=file.path(wd, "sim"), save.p
                     value = c(asap$SSB, asap$F.report, asap$N.age[,1]))
 
   # get simulated values
-  for (isim in 1:length(whichsim)){
+  for (isim in 1:length(whichsim)) {
     mysim <- whichsim[isim]
-    fname <- file.path(od, paste0(asap.name, "_sim", mysim, ".rdat"))
-    if (file.exists(fname)){
+    fname <- file.path(od, paste0(asap.name, "_sim", mysim, rdat_ext))
+    if (file.exists(fname)) {
       asap <- dget(fname)
       simres <- data.frame(Source = paste0("Sim", mysim),
                            metric = rep(c("SSB", "Freport", "Recruits"), each=nyears),

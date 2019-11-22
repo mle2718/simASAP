@@ -5,7 +5,7 @@
 \title{PlotSimASAP}
 \usage{
 PlotSimASAP(wd, asap.name, whichsim, od = file.path(wd, "sim"),
-  save.plots = FALSE, returnwhat = "nothing")
+  asapretro = FALSE, save.plots = FALSE, returnwhat = "nothing")
 }
 \arguments{
 \item{wd}{directory where original ASAP run is located}
@@ -15,6 +15,8 @@ PlotSimASAP(wd, asap.name, whichsim, od = file.path(wd, "sim"),
 \item{whichsim}{vector of numbers for which simulated data sets to plot}
 
 \item{od}{location where new data sets are saved (defaults to sim subdirectory of wd)}
+
+\item{asapretro}{logical flag for whether to add "_000" before ".rdat" when selecting files (default=FALSE)}
 
 \item{save.plots}{will save png files if TRUE (default = FALSE)}
 
