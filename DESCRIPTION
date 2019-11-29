@@ -1,6 +1,6 @@
 Package: simASAP
 Title: Simulate ASAP Data Sets and Optionally Run Them
-Version: 0.0.0.9010
+Version: 0.0.0.9012
 Authors@R: 
     person(given = "Chris",
            family = "Legault",

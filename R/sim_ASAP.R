@@ -72,23 +72,27 @@ SimASAP <- function(wd, asap.name, nsim, od=file.path(wd, "sim"), runflag=FALSE)
 
       iaa_mat <- asap.dat$dat$IAA_mats[[ind]]
       sim_mat <- iaa_mat
+      pred_index <- asap$index.pred[[ind]]
 
       # generate new index observations, only replace positive values
       indval <- iaa_mat[,2]
       sigma <- sqrt(log(1 + iaa_mat[,3] ^ 2))
+      posvalcount <- 0
       for (icount in 1:length(indval)){
         if (indval[icount] > 0){
+          posvalcount <- posvalcount + 1
           randomval <- stats::rnorm(1)
-          sim_mat[icount, 2] <- indval[icount] * exp(randomval * sigma[icount])
+          sim_mat[icount, 2] <- pred_index[posvalcount] * exp(randomval * sigma[icount])
         }
       }
 
       # generate new index at age proportions for years with ess > 0
       ess <- iaa_mat[, (asap$parms$nages + 4)]
       mycols <- seq(4, (length(iaa_mat[1,]) - 1))
+      index_agecomp <- asap$index.comp.mats[[(ind * 2)]] # comp mats have both obs and prd
       for (icount in 1:length(ess)){
         if (ess[icount] > 0){
-          iaavals <- iaa_mat[icount, mycols]
+          iaavals <- index_agecomp[icount, ]
           sumiaavals <- sum(iaavals)
           if (sumiaavals > 0){
             myprob <- iaavals / sumiaavals
