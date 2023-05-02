@@ -4,10 +4,12 @@
 \alias{ReadASAP3DatFile}
 \title{ReadASAP3DatFile}
 \usage{
-ReadASAP3DatFile(datf)
+ReadASAP3DatFile(datf, quiet=FALSE)
 }
 \arguments{
 \item{datf}{full path and name of dat file (including .dat suffix)}
+\item{quiet}{logical option passed to scan().}
+
 }
 \description{
 Read ASAP 3 dat file into R (thanks to Tim Miller for providing original version).
